@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Bela Vista RP - Formulário de Recrutamento</title>
+    <!-- Fontes Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                            accent: '#06b6d4'
+                        },
+                        dark: {
+                            bg: '#0a0d14',
+                            card: '#111827',
+                            border: '#1f2937',
+                            input: '#1a2234'
+                        }
+                    },
+                    fontFamily: {
+                        title: ['Rajdhani', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0d14;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.3);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0d14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="text-gray-200 font-sans min-h-screen flex flex-col justify-between p-4 md:p-8">
+
+    <!-- Modal de Sucesso / Preview -->
+    <div id="resultModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-dark-card border border-gray-800 rounded-xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl glow-effect overflow-hidden">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-check text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-title text-xl font-bold text-white tracking-wide">ENVIO PROCESSADO</h3>
+                        <p class="text-xs text-gray-400">Sua ficha da City Bela Vista está pronta</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-4 font-mono text-sm bg-gray-950/60 text-gray-300" id="formattedSummary">
+                <!-- Conteúdo gerado via JS -->
+            </div>
+
+            <div class="p-4 border-t border-gray-800 bg-gray-900/40 flex flex-wrap gap-3 justify-end">
+                <button onclick="copyToClipboard()" class="px-4 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-medium text-sm flex items-center gap-2 transition border border-gray-700">
+                    <i class="fa-regular fa-copy"></i>
+                    <span id="copyBtnText">Copiar para Discord</span>
+                </button>
+                <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm transition">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-4xl mx-auto w-full my-auto">
+        
+        <!-- Header Banner -->
+        <header class="bg-gradient-to-r from-gray-900 via-dark-card to-gray-900 border border-gray-800 rounded-2xl p-6 md:p-8 mb-6 relative overflow-hidden shadow-2xl glow-effect">
+            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                <i class="fa-solid fa-city text-[180px] text-brand-500"></i>
+            </div>
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-5 text-center md:text-left">
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-accent p-0.5 shadow-lg shrink-0">
+                        <div class="w-full h-full bg-dark-bg rounded-[14px] flex items-center justify-center">
+                            <i class="fa-solid fa-gamepad text-3xl text-brand-500"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-500 text-xs font-semibold uppercase tracking-wider mb-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Servidor MTA:RP
+                        </div>
+                        <h1 class="font-title text-3xl md:text-4xl font-bold tracking-wider text-white uppercase">
+                            CITY BELA VISTA
+                        </h1>
+                        <p class="text-gray-400 text-sm mt-1">Formulário Oficial de Recrutamento & Whitelist</p>
+                    </div>
+                </div>
+
+                <div class="bg-dark-bg/60 border border-gray-800 rounded-xl p-3 text-xs text-gray-400 space-y-1 self-stretch md:self-auto min-w-[200px]">
+                    <div class="flex justify-between"><span>Status:</span> <span class="text-emerald-400 font-medium">Vagas Abertas</span></div>
+                    <div class="flex justify-between"><span>Plataforma:</span> <span class="text-white font-medium">MTA:SA</span></div>
+                    <div class="flex justify-between"><span>Envio:</span> <span class="text-brand-500 font-medium">Direto ao Discord</span></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Form Card -->
+        <main class="bg-dark-card border border-gray-800 rounded-2xl p-6 md:p-8 shadow-xl">
+            <!-- Alertas de Status -->
+            <div id="statusAlert" class="hidden mb-6 p-4 rounded-xl border text-sm font-medium transition-all"></div>
+
+            <form id="whitelistForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                
+                <!-- Sessão 1: Dados OOC (Out of Character) -->
+                <div>
+                    <h2 class="font-title text-xl font-bold text-white uppercase tracking-wide border-b border-gray-800 pb-2 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-brand-500"></i> Informações Pessoais (OOC)
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Seu Nome Real *</label>
+                            <input type="text" id="nomeReal" required placeholder="Ex: Gabriel Silva" 
+                                   class="w-full bg-dark-input border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Sua Idade *</label>
+                            <input type="number" id="idade" min="12" max="99" required placeholder="Ex: 18" 
+                                   class="w-full bg-dark-input border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Tag do Discord *</label>
+                            <input type="text" id="discordTag" required placeholder="Ex: usuario#0000 ou @seuuser" 
+                                   class="w-full bg-dark-input border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sessão 2: Dados IC (In Character) -->
+                <div>
+                    <h2 class="font-title text-xl font-bold text-white uppercase tracking-wide border-b border-gray-800 pb-2 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-id-card text-brand-accent"></i> Dados do Personagem (IC)
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Nome & Sobrenome RP *</label>
+                            <input type="text" id="nomePersonagem" required placeholder="Ex: Carlos Mendoza" 
+                                   class="w-full bg-dark-input border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">ID In-Game (Passaporte) *</label>
+                            <input type="text" id="idIngame" required placeholder="Ex: 1042" 
+                                   class="w-full bg-dark-input border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Tempo de Experiência *</label>
+                            <select id="experiencia" required class="w-full bg-dark-input border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                                <option value="" disabled selected>Selecione uma opção...</option>
+                                <option value="Iniciante (Primeira vez jogando RP)">Iniciante (Primeira vez em RP)</option>
+                                <option value="Menos de 6 meses">Menos de 6 meses</option>
+                                <option value="De 6 meses a 1 ano">De 6 meses a 1 ano</option>
+                                <option value="Mais de 1 ano (Experiente)">Mais de 1 ano (Experiente)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sessão 3: Questionário de Roleplay (12 Perguntas) -->
+                <div>
+                    <h2 class="font-title text-xl font-bold text-white uppercase tracking-wide border-b border-gray-800 pb-2 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark text-brand-500"></i> Avaliação de Roleplay (Whitelist)
+                    </h2>
+                    
+                    <div class="space-y-5">
+                        <!-- Pergunta 1 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                1. O que é o Roleplay (RP) para você e qual é a principal regra de ouro que todo jogador deve seguir ao interpretar seu personagem? *
+                            </label>
+                            <textarea id="pergunta1" required rows="2" placeholder="Responda detalhadamente..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 2 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                2. Explique com suas palavras a diferença entre os conceitos de Metagaming e Powergaming. *
+                            </label>
+                            <textarea id="pergunta2" required rows="2" placeholder="Diferencie o uso de informações externas e ações irreais/forçadas..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 3 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                3. O que significa o conceito de RDM (Random Deathmatch) e VDM (Vehicle Deathmatch)? Dê um exemplo de cada. *
+                            </label>
+                            <textarea id="pergunta3" required rows="2" placeholder="Explique agressões gratuitas e uso de veículos como armas..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 4 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                4. O que é o "Amor à Vida" (Valor à Vida) e em qual situação exata seu personagem deve obedecer a essa regra? *
+                            </label>
+                            <textarea id="pergunta4" required rows="2" placeholder="O que fazer quando estiver rendido por vários indivíduos..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 5 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                5. O que é a Regra do Amor ao Dinheiro / Bens Materiais e como ela se aplica a assaltos? *
+                            </label>
+                            <textarea id="pergunta5" required rows="2" placeholder="Valorizar bens versus preservar a integridade física..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 6 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                6. Seu personagem sofreu um acidente grave ou foi baleado e desmaiou. O que é permitido e o que é proibido após acordar (Memória / New Life)? *
+                            </label>
+                            <textarea id="pergunta6" required rows="2" placeholder="Explique sobre a amnésia e retorno ao local..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 7 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                7. Durante uma abordagem, o outro jogador cometeu uma infração de regras. Qual deve ser sua atitude na hora? *
+                            </label>
+                            <textarea id="pergunta7" required rows="2" placeholder="Como agir em relação ao 'joga agora, reporta depois'..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 8 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                8. O que é o "Anti-RP" e como você agiria se visse alguém cometendo uma ação totalmente incoerente com a realidade? *
+                            </label>
+                            <textarea id="pergunta8" required rows="2" placeholder="Exemplifique ações sem sentido na cidade..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 9 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                9. Seu personagem está em um beco escuro e um grupo anuncia um assalto, exigindo todos os seus pertences. Como proceder para manter um RP de qualidade? *
+                            </label>
+                            <textarea id="pergunta9" required rows="2" placeholder="Como colaborar com a cena sem xingar ou dar ESC..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 10 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                10. Descreva brevemente qual será o objetivo de vida do seu personagem na cidade (Background/História). *
+                            </label>
+                            <textarea id="pergunta10" required rows="2" placeholder="Civil trabalhador, criminoso em ascensão, policial..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 11 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                11. Qual é o maior medo ou o principal ponto fraco do seu personagem? Como isso pode afetá-lo sob pressão? *
+                            </label>
+                            <textarea id="pergunta11" required rows="2" placeholder="Fale sobre as falhas e vulnerabilidades dele..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- Pergunta 12 -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
+                                12. Se o seu personagem recebesse uma proposta de propina ou se visse diante de uma grande tentação ilegal, como ele reagiria com base na índole criada? *
+                            </label>
+                            <textarea id="pergunta12" required rows="2" placeholder="Índole honesta até o fim ou corrupção/ambição..." 
+                                      class="w-full bg-dark-input border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition resize-none"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Termos e Envio -->
+                <div class="pt-4 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer text-xs text-gray-400">
+                        <input type="checkbox" required class="w-4 h-4 rounded bg-dark-input border-gray-700 text-brand-600 focus:ring-0">
+                        <span>Li e concordo com as regras da <strong>City Bela Vista</strong>.</span>
+                    </label>
+
+                    <button type="submit" id="submitBtn" 
+                            class="w-full md:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-600 text-white font-title text-lg font-bold tracking-wider uppercase transition shadow-lg flex items-center justify-center gap-2 group">
+                        <span>Enviar Formulário</span>
+                        <i class="fa-solid fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-xs text-gray-500 space-y-2">
+            <p>City Bela Vista MTA:RP &copy; Todos os direitos reservados.</p>
+            <p class="text-[11px] text-gray-600">Sistema otimizado para avaliação de membros e whitelist automática.</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Webhook do Discord pré-configurado
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1566845616296820877/6KLdLfjKggYEr2MTT_jAvyNxaxnrn98fTcqqIM3BTGqxgR3o24jfwp0PB5GAJfIJcdNy";
+
+        let currentFormData = null;
+
+        function showAlert(message, isError = false) {
+            const alertBox = document.getElementById('statusAlert');
+            alertBox.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-rose-500/10', 'border-rose-500/30', 'text-rose-400');
+            
+            if (isError) {
+                alertBox.classList.add('bg-rose-500/10', 'border-rose-500/30', 'text-rose-400');
+            } else {
+                alertBox.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+            }
+            
+            alertBox.innerHTML = message;
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Processamento do Envio via Fetch POST
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            // UI State: Carregando
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Enviando...`;
+
+            // Coleta de dados
+            currentFormData = {
+                nomeReal: document.getElementById('nomeReal').value,
+                idade: document.getElementById('idade').value,
+                discordTag: document.getElementById('discordTag').value,
+                nomePersonagem: document.getElementById('nomePersonagem').value,
+                idIngame: document.getElementById('idIngame').value,
+                experiencia: document.getElementById('experiencia').value,
+                p1: document.getElementById('pergunta1').value,
+                p2: document.getElementById('pergunta2').value,
+                p3: document.getElementById('pergunta3').value,
+                p4: document.getElementById('pergunta4').value,
+                p5: document.getElementById('pergunta5').value,
+                p6: document.getElementById('pergunta6').value,
+                p7: document.getElementById('pergunta7').value,
+                p8: document.getElementById('pergunta8').value,
+                p9: document.getElementById('pergunta9').value,
+                p10: document.getElementById('pergunta10').value,
+                p11: document.getElementById('pergunta11').value,
+                p12: document.getElementById('pergunta12').value,
+                data: new Date().toLocaleString('pt-BR')
+            };
+
+            // Payload formatado em Rich Embed para o Discord (dividido em blocos para caber no limite do Discord)
+            const discordPayload = {
+                username: "City Bela Vista - Whitelist",
+                avatar_url: "https://cdn-icons-png.flaticon.com/512/683/683033.png",
+                embeds: [{
+                    title: "📝 Nova Ficha de Whitelist Completa",
+                    color: 3867902, // Azul Brand (#3b82f6)
+                    fields: [
+                        { name: "👤 Nome Real", value: currentFormData.nomeReal, inline: true },
+                        { name: "🎂 Idade", value: `${currentFormData.idade} anos`, inline: true },
+                        { name: "💬 Tag Discord", value: currentFormData.discordTag, inline: true },
+                        { name: "🎭 Nome RP", value: currentFormData.nomePersonagem, inline: true },
+                        { name: "🆔 ID In-Game", value: currentFormData.idIngame, inline: true },
+                        { name: "🎮 Experiência", value: currentFormData.experiencia, inline: true },
+                        { name: "1️⃣ O que é RP / Regra de Ouro", value: currentFormData.p1 },
+                        { name: "2️⃣ Metagaming & Powergaming", value: currentFormData.p2 },
+                        { name: "3️⃣ RDM & VDM", value: currentFormData.p3 },
+                        { name: "4️⃣ Amor à Vida", value: currentFormData.p4 },
+                        { name: "5️⃣ Amor ao Dinheiro / Bens", value: currentFormData.p5 },
+                        { name: "6️⃣ New Life & Memória", value: currentFormData.p6 },
+                        { name: "7️⃣ Quebra de Regra em Ação", value: currentFormData.p7 },
+                        { name: "8️⃣ Anti-RP", value: currentFormData.p8 },
+                        { name: "9️⃣ Reação a Assalto", value: currentFormData.p9 },
+                        { name: "🔟 Objetivo / Background", value: currentFormData.p10 },
+                        { name: "11️⃣ Ponto Fraco / Medo", value: currentFormData.p11 },
+                        { name: "12️⃣ Índole & Tentação / Propina", value: currentFormData.p12 }
+                    ],
+                    footer: { text: "City Bela Vista MTA:RP • Enviado em: " + currentFormData.data }
+                }]
+            };
+
+            try {
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(discordPayload)
+                });
+
+                if (response.ok || response.status === 204) {
+                    showAlert("<i class='fa-solid fa-circle-check mr-2'></i> Formulário enviado com sucesso! Sua ficha já está em análise no nosso Discord.");
+                    document.getElementById('whitelistForm').reset();
+                    showSummaryModal(currentFormData);
+                } else {
+                    throw new Error(`Erro na requisição: status ${response.status}`);
+                }
+            } catch (error) {
+                console.error("Erro no envio:", error);
+                showAlert("<i class='fa-solid fa-triangle-exclamation mr-2'></i> Ocorreu um erro ao enviar para o Discord. Verifique sua conexão e tente novamente.", true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        }
+
+        // Exibir Modal com Resumo
+        function showSummaryModal(data) {
+            const summaryContainer = document.getElementById('formattedSummary');
+            
+            summaryContainer.innerHTML = `
+                <div class="space-y-3">
+                    <p class="text-brand-500 font-bold">=== FICHA ENVIADA PARA O DISCORD ===</p>
+                    <p><strong>[OOC] Nome:</strong> ${data.nomeReal} (${data.idade} anos) | <strong>Discord:</strong> ${data.discordTag}</p>
+                    <p><strong>[IC] Personagem:</strong> ${data.nomePersonagem} (ID: ${data.idIngame}) | <strong>Exp:</strong> ${data.experiencia}</p>
+                    <hr class="border-gray-800">
+                    <p><strong>1. O que é RP:</strong> <span class="text-gray-400">${data.p1}</span></p>
+                    <p><strong>2. MG & PG:</strong> <span class="text-gray-400">${data.p2}</span></p>
+                    <p><strong>3. RDM & VDM:</strong> <span class="text-gray-400">${data.p3}</span></p>
+                    <p><strong>4. Amor à Vida:</strong> <span class="text-gray-400">${data.p4}</span></p>
+                    <p><strong>5. Amor ao Dinheiro:</strong> <span class="text-gray-400">${data.p5}</span></p>
+                    <p><strong>6. New Life:</strong> <span class="text-gray-400">${data.p6}</span></p>
+                    <p><strong>7. Regra em Ação:</strong> <span class="text-gray-400">${data.p7}</span></p>
+                    <p><strong>8. Anti-RP:</strong> <span class="text-gray-400">${data.p8}</span></p>
+                    <p><strong>9. Reação a Assalto:</strong> <span class="text-gray-400">${data.p9}</span></p>
+                    <p><strong>10. Background:</strong> <span class="text-gray-400">${data.p10}</span></p>
+                    <p><strong>11. Ponto Fraco:</strong> <span class="text-gray-400">${data.p11}</span></p>
+                    <p><strong>12. Índole/Propina:</strong> <span class="text-gray-400">${data.p12}</span></p>
+                    <p class="text-xs text-gray-500 pt-2">Enviado em: ${data.data}</p>
+                </div>
+            `;
+
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+        }
+
+        function copyToClipboard() {
+            if (!currentFormData) return;
+
+            const discordFormattedText = 
+`**=== FICHA DE WHITELIST - CITY BELA VISTA ===**
+> **Nome Real:** ${currentFormData.nomeReal} (${currentFormData.idade} anos)
+> **Discord:** ${currentFormData.discordTag}
+> **Personagem IC:** ${currentFormData.nomePersonagem} (ID: ${currentFormData.idIngame})
+> **Experiência:** ${currentFormData.experiencia}
+
+**1. O que é RP:**
+\`\`\`${currentFormData.p1}\`\`\`
+**2. MG & PG:**
+\`\`\`${currentFormData.p2}\`\`\`
+**3. RDM & VDM:**
+\`\`\`${currentFormData.p3}\`\`\`
+**4. Amor à Vida:**
+\`\`\`${currentFormData.p4}\`\`\`
+**5. Amor ao Dinheiro:**
+\`\`\`${currentFormData.p5}\`\`\`
+**6. New Life:**
+\`\`\`${currentFormData.p6}\`\`\`
+**7. Regra em Ação:**
+\`\`\`${currentFormData.p7}\`\`\`
+**8. Anti-RP:**
+\`\`\`${currentFormData.p8}\`\`\`
+**9. Reação a Assalto:**
+\`\`\`${currentFormData.p9}\`\`\`
+**10. Background:**
+\`\`\`${currentFormData.p10}\`\`\`
+**11. Ponto Fraco:**
+\`\`\`${currentFormData.p11}\`\`\`
+**12. Índole / Propina:**
+\`\`\`${currentFormData.p12}\`\`\``;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = discordFormattedText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const btnText = document.getElementById('copyBtnText');
+            btnText.textContent = "Copiado!";
+            setTimeout(() => {
+                btnText.textContent = "Copiar para Discord";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
